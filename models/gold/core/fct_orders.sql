@@ -1,29 +1,33 @@
+-- =============================================================================
+-- fct_orders
+-- =============================================================================
+-- Hechos de pedidos. Grano: una fila por pedido.
+-- =============================================================================
+
 with orders as (
-    select * from {{ ref('slv_sql_server_dbo__orders') }}
+    select * from {{ ref('int_orders__enriched') }}
 ),
 
-fct_orders as (
+final as (
     select
-        -- Claves foráneas (Foreign Keys) a las dimensiones
-        order_id,
-        user_id,
-        address_id,
-        promo_id,
-        
-        -- Fechas y datos transaccionales
-        created_at_utc,
-        estimated_delivery_at_utc,
-        delivered_at_utc,
-        tracking_id,
-        shipping_service,
-        order_status,
-        
-        -- Métricas de negocio (Hechos)
-        shipping_cost_usd,
-        order_cost_usd,
-        order_total_usd
-        
+          order_id
+        , user_id
+        , address_id
+        , promo_id
+        , order_status
+        , shipping_service
+        , tracking_id
+        , item_order_cost_usd
+        , shipping_cost_usd
+        , total_order_cost_usd
+        , discount_usd
+        , total_order_cost_usd - discount_usd       as net_order_cost_usd
+        , created_at_utc                            as order_created_at_utc
+        , estimated_delivery_at_utc
+        , delivered_at_utc
+        , days_to_deliver
+        , date_load
     from orders
 )
 
-select * from fct_orders
+select * from final

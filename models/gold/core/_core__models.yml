@@ -143,16 +143,23 @@ models:
                 store_failures: true
 
 unit_tests:
-  # Fixture CSV en el expect (tests/fixtures/dim_users__email_expected.csv) e
-  # input también desde CSV: útil cuando hay muchos casos.
-  - name: test_dim_users_valida_formato_email
-    model: dim_users
+  - name: test_dim_products_categoriza_stock
+    description: Comprueba la categorización del stock según las unidades disponibles.
+    model: dim_products
     given:
-      - input: ref('slv_sql_server_dbo__users')
-        format: csv
-        fixture: slv_users__email_cases
-      - input: ref('dim_addresses')
-        rows: []
+      - input: ref('slv_sql_server_dbo__products')
+        rows:
+          - product_id: 1
+            inventory_units: 0
+          - product_id: 2
+            inventory_units: 5
+          - product_id: 3
+            inventory_units: 100
     expect:
-      format: csv
-      fixture: dim_users__email_expected
+      rows:
+        - product_id: 1
+          stock_status: out_of_stock
+        - product_id: 2
+          stock_status: low_stock
+        - product_id: 3
+          stock_status: in_stock

@@ -18,3 +18,7 @@ sources:
                   arguments:
                     to: ref('slv_sql_server_dbo__products')
                     field: product_id
+
+          - name: quantity
+            data_tests:
+                - positive_values

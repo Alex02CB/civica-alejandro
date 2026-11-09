@@ -30,8 +30,8 @@ enriched_orders as (
         , o.tracking_id
         , o.shipping_service
         , o.shipping_cost_usd
-        , o.order_cost_usd
-        , o.order_total_usd
+        , o.item_order_cost_usd
+        , o.total_order_cost_usd
         , o.order_status
         , o.date_load
         

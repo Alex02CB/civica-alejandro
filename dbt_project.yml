@@ -46,6 +46,7 @@ models:
     staging:
       +materialized: view
       +database: DEV_SILVER_DB
+      +tags: ['staging']
       sql_server_dbo:
         +schema: sql_server_dbo
       google_sheets:
@@ -56,6 +57,7 @@ models:
     silver:
       +materialized: table
       +database: DEV_SILVER_DB
+      +tags: ['silver']
       sql_server_dbo:
         +schema: sql_server_dbo
       google_sheets:
@@ -66,21 +68,32 @@ models:
     gold:
       +materialized: table
       +database: DEV_GOLD_DB
+      +tags: ['gold']
       intermediate:
         +materialized: view
         +schema: intermediate
       core:
         +schema: core
+        +tags: ['core']
         +meta:
           owner: equipo-datos-core
       marketing:
         +schema: marketing
+        +tags: ['marketing']
         +meta:
           owner: equipo-marketing-analytics
       product:
         +schema: product
+        +tags: ['product']
         +meta:
           owner: equipo-producto
+# =============================================================================
+# Vars
+# =============================================================================
+
+vars:
+  low_stock_threshold: 10
+  budget_start_date: '2024-01-01'
 
 # =============================================================================
 # Seeds
@@ -107,3 +120,11 @@ snapshots:
     +database: DEV_SILVER_DB
     +schema: snapshots
     +transient: false
+
+# =============================================================================
+# Hook
+# =============================================================================
+
+on-run-end:
+  - "{{ log_run_summary(results) }}"
+

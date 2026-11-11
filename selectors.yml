@@ -28,8 +28,3 @@ selectors:
         - exclude:
             - method: resource_type
               value: snapshot
-  - name: capa_gold
-    description: Todos los modelos de Gold (tag heredado de dbt_project.yml).
-    definition:
-      method: tag
-      value: gold

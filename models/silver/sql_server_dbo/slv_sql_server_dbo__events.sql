@@ -25,7 +25,7 @@ with events as (
     select * from {{ ref('stg_sql_server_dbo__events') }}
     where not is_deleted
     {% if is_incremental() %}
-      and date_load >= (select dateadd('hour', -1, max(date_load)) from {{ this }})
+      and date_load > (select dateadd('hour', -1, max(date_load)) from {{ this }})
     {% endif %}
 ),
 
